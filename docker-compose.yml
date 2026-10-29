@@ -10,7 +10,7 @@ services:
     healthcheck: 
       test: "pg_isready -U ${POSTGRES_USER:-wallet}"
       interval: 2s
-      retries: 5
+      retries: 15
   
   sqs:
     image: 'nahuelnucera/ministack:1.5.34'
