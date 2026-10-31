@@ -1,18 +1,22 @@
 import { Migrator } from '@mikro-orm/migrations';
 import { defineConfig } from '@mikro-orm/postgresql';
-import { WalletRecord } from './wallet/infrastructure/wallet.record.js';
+import { loadConfig } from './config.js';
+import { ALL_RECORDS } from './infrastructure/persistence/records/index.js';
+
+const { database } = loadConfig();
 
 export default defineConfig({
-  host: process.env.DB_HOST ?? 'localhost',
-  port: Number(process.env.DB_PORT ?? 5432),
-  user: process.env.POSTGRES_USER ?? 'wallet',
-  password: process.env.POSTGRES_PASSWORD ?? 'wallet',
-  dbName: process.env.POSTGRES_DB ?? 'wallet',
-  entities: [WalletRecord],
+  host: database.host,
+  port: database.port,
+  user: database.user,
+  password: database.password,
+  dbName: database.name,
+  entities: ALL_RECORDS,
   extensions: [Migrator],
+  pool: { max: database.poolMax },
   migrations: {
-    path: 'src/database/migrations',
-    pathTs: 'src/database/migrations',
+    path: 'src/infrastructure/persistence/migrations',
+    pathTs: 'src/infrastructure/persistence/migrations',
     snapshot: false,
     snapshotOnMigrate: false,
   },
